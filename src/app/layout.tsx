@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Fonu Task Manager",
-  description: "Fonu Task Manager - Assessment",
+  title: "Task Manager",
+  description: "Task Management Application",
 };
 
 export default function RootLayout({

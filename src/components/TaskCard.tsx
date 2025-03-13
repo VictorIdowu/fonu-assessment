@@ -27,14 +27,14 @@ const TaskCard = ({ task }: { task: task }) => {
         <CardTitle className="flex flex-col">{task.title}</CardTitle>
         <MarkCompleted task={task} />
       </CardHeader>
-      <CardContent className="text-sm text-gray-700 flex flex-col gap-3 justify-between">
-        <p className="h-20">{task.description}</p>
-        <p className="text-xs text-gray-700 font-medium">
+      <CardContent className="text-sm text-gray-700 flex flex-col gap-3 justify-between grow">
+        <p className="min-h-20">{task.description}</p>
+        <p className="text-xs text-gray-700 font-medium mt-auto">
           <span className="text-gray-500">Due Date: </span>
           {task.date && format(task.date, "PPP")}
         </p>
       </CardContent>
-      <CardFooter className="text-sm text-gray-700 flex justify-between items-center">
+      <CardFooter className="text-sm text-gray-700 flex justify-between items-center mt-auto">
         <p className="flex gap-2 items-center text-xs">
           <span
             className={`rounded-lg py-1 px-2 capitalize ${

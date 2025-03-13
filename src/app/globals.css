@@ -132,3 +132,14 @@
   font-weight: 400;
   font-style: normal;
 }
+
+::-webkit-scrollbar {
+  display: none;
+}
+* {
+  scrollbar-width: none;
+  scrollbar-color: transparent transparent;
+}
+.ms-scrollbar {
+  -ms-overflow-style: none;
+}

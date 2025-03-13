@@ -1,6 +1,6 @@
 "use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { GridIcon, LoaderCircle, Plus, RowsIcon } from "lucide-react";
+import { GridIcon, LoaderCircle, RowsIcon } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -12,14 +12,37 @@ import {
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
 import useTaskStore from "@/components/tasks-store";
-import GridView from "@/components/GridView";
 import EmptyState from "@/components/EmptyState";
 import AddNewTask from "@/components/AddNewTask";
+import TaskCard from "@/components/TaskCard";
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import TaskRow from "@/components/TaskRow";
 import { task } from "@/lib/types";
 
 export default function Home() {
   const { isInitialised, setIsInitialised, tasks } = useTaskStore();
   const [status, setStatus] = useState("all");
+  const [data, setData] = useState<task[] | []>([]);
+
+  useEffect(() => {
+    if (!tasks) return;
+
+    const filteredTasks =
+      status === "all" ? tasks : tasks.filter((task) => task.status === status);
+
+    const sortedTasks = filteredTasks.sort(
+      (a, b) =>
+        new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()
+    );
+
+    setData(sortedTasks);
+  }, [tasks, status]);
 
   useEffect(() => {
     setIsInitialised(true);
@@ -43,7 +66,7 @@ export default function Home() {
           <h1 className="text-2xl font-bold">Task Manager</h1>
           <AddNewTask />
         </header>
-        <Tabs defaultValue="grid">
+        <Tabs defaultValue="grid" className="mb-20">
           <div className="flex flex-col-reverse sm:flex-row justify-between sm:items-center gap-6 mt-6">
             <TabsList className="grid w-full grid-cols-2 max-w-[170px]">
               {tabTriggers.map((trigger, i) => (
@@ -79,8 +102,12 @@ export default function Home() {
             </Select>
           </div>
           <TabsContent value="grid" className="mt-4">
-            {tasks && tasks.length ? (
-              <GridView />
+            {data && data.length ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {data?.map((task) => (
+                  <TaskCard task={task} key={task.id} />
+                ))}
+              </div>
             ) : (
               <>
                 {isInitialised ? (
@@ -94,8 +121,26 @@ export default function Home() {
             )}
           </TabsContent>
           <TabsContent value="table" className="mt-4">
-            {tasks && tasks.length ? (
-              "Table"
+            {data && data.length ? (
+              <Table className="min-w-3xl">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[50px]">Completed</TableHead>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Due Date</TableHead>
+                    <TableHead className="w-[50px] text-right">
+                      Delete
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data.map((task) => (
+                    <TaskRow task={task} key={task.id} />
+                  ))}
+                </TableBody>
+              </Table>
             ) : (
               <>
                 {isInitialised ? (

@@ -42,6 +42,13 @@ const AddNewTask = () => {
   };
   const [form, setForm] = useState<FormType>(formInit);
 
+  const submitDisabled =
+    loading ||
+    !form.title ||
+    !form.date ||
+    form.title.length >= 20 ||
+    form.description.split(" ").length >= 15;
+
   const addTask: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     if (!form.title || form.date === undefined) return;
@@ -62,12 +69,17 @@ const AddNewTask = () => {
       setTasks([newTask]);
     }
     setLoading(false);
-    setForm(formInit);
     setShowModal(false);
   };
 
   return (
-    <Dialog open={showModal} onOpenChange={setShowModal}>
+    <Dialog
+      open={showModal}
+      onOpenChange={(open) => {
+        setShowModal(open);
+        setForm(formInit);
+      }}
+    >
       <DialogTrigger asChild>
         <Button className="flex items-center gap-1 !px-6 !py-5">
           <Plus size={16} /> Add Task
@@ -86,10 +98,23 @@ const AddNewTask = () => {
                 type="text"
                 placeholder="Enter Title"
                 value={form.title}
-                onChange={(e) =>
-                  setForm((prev) => ({ ...prev, title: e.target.value }))
-                }
+                onChange={(e) => {
+                  setForm((prev) => ({ ...prev, title: e.target.value }));
+                }}
+                onKeyDown={(e) => {
+                  if (form.title.length >= 20 && e.key != "Backspace") {
+                    e.preventDefault();
+                  }
+                }}
+                className={` ${
+                  form.title.length >= 20 && "border-red-300 bg-red-200/25"
+                }`}
               />
+              {form.title.length >= 20 && (
+                <p className="text-start text-xs text-red-600">
+                  Can enter only a maximum of 20 letters for title
+                </p>
+              )}
             </div>
             <div className="flex flex-col w-full gap-1.5">
               <Label htmlFor="description">Description</Label>
@@ -100,8 +125,24 @@ const AddNewTask = () => {
                 onChange={(e) =>
                   setForm((prev) => ({ ...prev, description: e.target.value }))
                 }
-                className="h-32"
+                onKeyDown={(e) => {
+                  if (
+                    form.description.split(" ").length >= 15 &&
+                    e.key != "Backspace"
+                  ) {
+                    e.preventDefault();
+                  }
+                }}
+                className={`h-32 ${
+                  form.description.split(" ").length >= 15 &&
+                  "border-red-300 bg-red-200/25"
+                }`}
               />
+              {form.description.split(" ").length >= 15 && (
+                <p className="text-start text-xs text-red-600">
+                  Can enter only a maximum of 15 words for description
+                </p>
+              )}
             </div>
             <div className="flex flex-col w-full gap-1.5">
               <Label htmlFor="description">Due date</Label>
@@ -125,11 +166,11 @@ const AddNewTask = () => {
                     mode="single"
                     selected={form.date}
                     onSelect={(date) => {
-                      date
-                        ? setForm((prev) => ({ ...prev, date: new Date(date) }))
-                        : "";
+                      if (date) {
+                        setForm((prev) => ({ ...prev, date: new Date(date) }));
+                      }
                     }}
-                    disabled={(date) => date.getDate() < new Date().getDate()}
+                    disabled={(date) => date < new Date()}
                   />
                 </PopoverContent>
               </Popover>
@@ -137,7 +178,7 @@ const AddNewTask = () => {
 
             <Button
               type="submit"
-              disabled={loading || !form.title || !form.date}
+              disabled={submitDisabled}
               className="flex items-center gap-1"
             >
               {loading ? <Loader2 className="animate-spin" /> : "Add"}

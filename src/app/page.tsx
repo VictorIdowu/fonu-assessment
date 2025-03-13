@@ -46,7 +46,7 @@ export default function Home() {
 
   useEffect(() => {
     setIsInitialised(true);
-  }, []);
+  }, [setIsInitialised]);
 
   const tabTriggers = [
     { text: "Grid", val: "grid", icon: <GridIcon size={16} /> },
@@ -125,7 +125,7 @@ export default function Home() {
               <Table className="min-w-3xl">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[50px]">Completed</TableHead>
+                    <TableHead className="w-[50px]"></TableHead>
                     <TableHead>Title</TableHead>
                     <TableHead>Description</TableHead>
                     <TableHead>Status</TableHead>

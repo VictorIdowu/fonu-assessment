@@ -51,7 +51,9 @@ const MarkCompleted = ({ task }: { task: task }) => {
             )}
           </div>
         </TooltipTrigger>
-        <TooltipContent>Mark as Completed</TooltipContent>
+        <TooltipContent>
+          Mark as {task.status === "completed" ? "Active" : "Completed"}
+        </TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );

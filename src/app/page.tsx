@@ -1,7 +1,6 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { GridIcon, RowsIcon } from "lucide-react";
+import { GridIcon, LoaderCircle, Plus, RowsIcon } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -11,10 +10,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useTaskStore from "@/components/tasks-store";
+import GridView from "@/components/GridView";
+import EmptyState from "@/components/EmptyState";
+import AddNewTask from "@/components/AddNewTask";
+import { task } from "@/lib/types";
 
 export default function Home() {
+  const { isInitialised, setIsInitialised, tasks } = useTaskStore();
   const [status, setStatus] = useState("all");
+
+  useEffect(() => {
+    setIsInitialised(true);
+  }, []);
+
   const tabTriggers = [
     { text: "Grid", val: "grid", icon: <GridIcon size={16} /> },
     { text: "Table", val: "table", icon: <RowsIcon size={16} /> },
@@ -31,10 +41,10 @@ export default function Home() {
       <main className="max-w-4xl p-6 mx-auto">
         <header className="flex justify-between items-center gap-1">
           <h1 className="text-2xl font-bold">Task Manager</h1>
-          <Button>Add Task</Button>
+          <AddNewTask />
         </header>
         <Tabs defaultValue="grid">
-          <div className="flex justify-between items-center gap-1 mt-6">
+          <div className="flex flex-col-reverse sm:flex-row justify-between sm:items-center gap-6 mt-6">
             <TabsList className="grid w-full grid-cols-2 max-w-[170px]">
               {tabTriggers.map((trigger, i) => (
                 <TabsTrigger
@@ -49,7 +59,7 @@ export default function Home() {
             </TabsList>
 
             <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger className="w-[180px] cursor-pointer">
+              <SelectTrigger className="w-full sm:w-[180px] cursor-pointer">
                 <SelectValue placeholder="Select a status" />
               </SelectTrigger>
               <SelectContent>
@@ -68,11 +78,39 @@ export default function Home() {
               </SelectContent>
             </Select>
           </div>
-          <TabsContent value="grid">Grid View</TabsContent>
-          <TabsContent value="table">Table View</TabsContent>
+          <TabsContent value="grid" className="mt-4">
+            {tasks && tasks.length ? (
+              <GridView />
+            ) : (
+              <>
+                {isInitialised ? (
+                  <EmptyState status={status} />
+                ) : (
+                  <div className="flex justify-center items-center mt-20">
+                    <LoaderCircle size={50} className="animate-spin" />
+                  </div>
+                )}
+              </>
+            )}
+          </TabsContent>
+          <TabsContent value="table" className="mt-4">
+            {tasks && tasks.length ? (
+              "Table"
+            ) : (
+              <>
+                {isInitialised ? (
+                  <EmptyState status={status} />
+                ) : (
+                  <div className="flex justify-center items-center mt-20">
+                    <LoaderCircle size={50} className="animate-spin" />
+                  </div>
+                )}
+              </>
+            )}
+          </TabsContent>
         </Tabs>
       </main>
-      <footer className="bg-gray-600/75 p-4 text-[#eee]">
+      <footer className="bg-gray-600/75 p-4 text-[#eee] fixed bottom-0 right-0 left-0">
         <div className="max-w-4xl mx-auto">
           <p>Created by Victor</p>
         </div>

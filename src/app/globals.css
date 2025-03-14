@@ -143,3 +143,7 @@
 .ms-scrollbar {
   -ms-overflow-style: none;
 }
+
+@theme {
+  --breakpoint-xs: 400px;
+}

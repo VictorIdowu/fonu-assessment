@@ -62,8 +62,8 @@ export default function Home() {
   return (
     <div className="oxanium">
       <main className="max-w-4xl p-6 mx-auto">
-        <header className="flex justify-between items-center gap-1">
-          <h1 className="text-2xl font-bold">Task Manager</h1>
+        <header className="flex flex-col xs:flex-row justify-between items-center gap-6">
+          <h1 className="text-xl sm:text-2xl font-bold">Task Manager</h1>
           <AddNewTask />
         </header>
         <Tabs defaultValue="grid" className="mb-20">

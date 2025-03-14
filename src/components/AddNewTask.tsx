@@ -81,7 +81,7 @@ const AddNewTask = () => {
       }}
     >
       <DialogTrigger asChild>
-        <Button className="flex items-center gap-1 !px-6 !py-5">
+        <Button className="flex items-center w-full xs:w-fit gap-1 !px-6 !py-5">
           <Plus size={16} /> Add Task
         </Button>
       </DialogTrigger>

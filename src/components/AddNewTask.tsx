@@ -137,7 +137,10 @@ const AddNewTask = () => {
                   }
                 }}
                 className={`h-32 ${
-                  form.description?.trim().split(" ").length >= 15 &&
+                  form.description
+                    ?.trim()
+                    .split(" ")
+                    .filter((text) => text).length >= 15 &&
                   "border-red-300 bg-red-200/25"
                 }`}
               />

@@ -117,7 +117,10 @@ const AddNewTask = () => {
               )}
             </div>
             <div className="flex flex-col w-full gap-1.5">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description" className="flex justify-between">
+                Description
+                <span>{form.description.split(" ").length - 1 || 0}/15</span>
+              </Label>
               <Textarea
                 id="description"
                 placeholder="Describe Task"
@@ -134,7 +137,7 @@ const AddNewTask = () => {
                   }
                 }}
                 className={`h-32 ${
-                  form.description.split(" ").length >= 15 &&
+                  form.description?.trim().split(" ").length >= 15 &&
                   "border-red-300 bg-red-200/25"
                 }`}
               />
